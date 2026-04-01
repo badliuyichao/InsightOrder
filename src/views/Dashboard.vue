@@ -52,12 +52,16 @@
         :value="basicStats?.pendingCount || 0"
         icon="⚠️"
         description="待分析工单数量"
+        :clickable="true"
+        @click="handlePendingClick"
       />
       <StatCard
         title="已完成"
         :value="basicStats?.completedCount || 0"
         icon="🎉"
         description="已完成工单数量"
+        :clickable="true"
+        @click="handleCompletedClick"
       />
     </div>
 
@@ -257,6 +261,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useDataStore } from '@/stores/dataStore'
 import { useUIStore } from '@/stores/uiStore'
 import { calculateBasicStats, groupByDimension } from '@/utils/dataAnalyzer'
@@ -289,6 +294,7 @@ import type { Ticket } from '@/types'
 
 const dataStore = useDataStore()
 const uiStore = useUIStore()
+const router = useRouter()
 
 // 详情对话框状态
 const detailDialogVisible = ref(false)
@@ -297,6 +303,21 @@ const detailFilterDescription = ref('')
 
 // 图表点击处理
 const { buildFilterCondition, filterTickets, buildFilterDescription } = useChartClick()
+
+/**
+ * 点击"待处理"卡片 - 跳转到待分析工单列表
+ */
+function handlePendingClick() {
+  router.push('/detail/status/待分析')
+}
+
+/**
+ * 点击"已完成"卡片 - 跳转到已完成工单列表
+ */
+function handleCompletedClick() {
+  // 已完成包括"支持确认完成"和"研发已完成"
+  router.push('/detail/status/支持确认完成')
+}
 
 // 基础统计（使用筛选后的数据）
 const basicStats = computed(() => {

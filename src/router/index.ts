@@ -10,6 +10,14 @@ const router = createRouter({
       meta: {
         title: '数据概览'
       }
+    },
+    {
+      path: '/detail/:type/:id',
+      name: 'detail',
+      component: () => import('@/views/Detail.vue'),
+      meta: {
+        title: '工单详情'
+      }
     }
   ]
 })

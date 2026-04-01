@@ -1,5 +1,5 @@
 <template>
-  <div class="stat-card glass-effect glow-border p-6 rounded-xl cursor-pointer">
+  <div class="stat-card glass-effect glow-border p-6 rounded-xl cursor-pointer" @click="handleClick">
     <!-- 卡片标题 -->
     <div class="card-header flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
@@ -36,6 +36,7 @@ interface Props {
   description?: string
   trend?: 'up' | 'down' | 'stable'
   trendValue?: number
+  clickable?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,8 +44,13 @@ const props = withDefaults(defineProps<Props>(), {
   unit: '',
   description: '',
   trend: undefined,
-  trendValue: 0
+  trendValue: 0,
+  clickable: false
 })
+
+const emit = defineEmits<{
+  click: []
+}>()
 
 const valueRef = ref<HTMLElement>()
 
@@ -66,6 +72,15 @@ const trendClass = computed(() => {
   if (props.trend === 'down') return 'bg-red-500/20 text-red-400'
   return 'bg-gray-500/20 text-gray-400'
 })
+
+/**
+ * 处理点击事件
+ */
+function handleClick() {
+  if (props.clickable) {
+    emit('click')
+  }
+}
 
 // 数字滚动动画
 watch(() => props.value, (newVal) => {
